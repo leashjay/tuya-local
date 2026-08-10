@@ -21,7 +21,6 @@ repos:
         args:
           - --check
           - --diff
-        files: ^((homeassistant|pylint|script|tests)/.+)?[^/]+\.(py|pyi)$
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.37.1
     hooks:
