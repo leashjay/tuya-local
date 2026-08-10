@@ -2,33 +2,45 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "Install requirements",
+      "label": "Install dependencies",
       "type": "shell",
-      "command": "uv sync",
+      "command": "uv sync --group dev",
       "problemMatcher": []
     },
     {
       "label": "Run Home Assistant on port 8123",
       "type": "shell",
-      "command": "python -m homeassistant",
-      "problemMatcher": []
-    },
-    {
-      "label": "Upgrade Home Assistant to latest dev",
-      "type": "shell",
-      "command": "pip install -U home-assistant",
+      "command": "uv run python -m homeassistant",
       "problemMatcher": []
     },
     {
       "label": "Unit tests",
       "type": "shell",
-      "command": "uv run pytest --cov=. --cov-config=.coveragerc --cov-report xml:coverage.xml",
+      "command": "uv run pytest --cov=custom_components/tuya_local --cov-config=.coveragerc --cov-report xml:coverage.xml",
+      "problemMatcher": []
+    },
+    {
+      "label": "Device config tests",
+      "type": "shell",
+      "command": "uv run pytest tests/test_device_config.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Translation tests",
+      "type": "shell",
+      "command": "uv run pytest tests/test_translations.py",
+      "problemMatcher": []
+    },
+    {
+      "label": "Lint",
+      "type": "shell",
+      "command": "uv run ruff check . && uv run ruff check --select I --diff . && uv run ruff format --check . && uv run yamllint custom_components/tuya_local/devices",
       "problemMatcher": []
     },
     {
       "label": "Reformat code",
       "type": "shell",
-      "command": "uv run ruff --select I . && uv ruff format .",
+      "command": "uv run ruff check --select I --fix . && uv run ruff format .",
       "problemMatcher": []
     }
   ]

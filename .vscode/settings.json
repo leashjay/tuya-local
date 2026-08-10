@@ -5,13 +5,11 @@
   "files.eol": "\n",
   "files.trimTrailingWhitespace": true,
   "files.insertFinalNewline": true,
-  "python.linting.pylintEnabled": true,
-  "python.linting.enabled": true,
-  "python.formatting.provider": "black",
-  "black-formatter.importStrategy": "fromEnvironment",
+  "[python]": {
+    "editor.defaultFormatter": "charliermarsh.ruff"
+  },
+  "ruff.importStrategy": "fromEnvironment",
   "python.testing.pytestEnabled": true,
-  "pylint.importStrategy": "fromEnvironment",
-  "python.linting.lintOnSave": true,
   "yaml.schemas": {
     "./custom_components/tuya_local/devices/device_config_schema.json": "/devices/*.yaml"
   }
