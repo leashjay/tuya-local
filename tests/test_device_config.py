@@ -1,10 +1,14 @@
 """Test the config parser"""
 
+from os import scandir
+from os.path import dirname
+
 import pytest
 import voluptuous as vol
 from fuzzywuzzy import fuzz
 from homeassistant.components.sensor import SensorDeviceClass
 
+from custom_components.tuya_local import devices as devices_dir
 from custom_components.tuya_local.helpers.config import get_device_id
 from custom_components.tuya_local.helpers.device_config import (
     TuyaDeviceConfig,
@@ -338,6 +342,48 @@ def test_can_find_config_files():
         found = True
         break
     assert found
+
+
+# Support files that legitimately live alongside the device configs.
+NON_CONFIG_FILES = {
+    "AGENTS.md",
+    "README.md",
+    "__init__.py",
+    "device_config_schema.json",
+}
+
+# Configs that are currently inert because they lack the .yaml extension.
+# Each entry is a device that the integration cannot load; see the comment at
+# the top of the file for why it has not simply been renamed.
+KNOWN_UNLOADABLE = {
+    "goldair_ggk1000_kettle",
+}
+
+
+def test_no_configs_hidden_by_a_missing_extension():
+    """Every config in devices/ must end in .yaml.
+
+    available_configs() globs *.yaml, and so does the yamltests workflow path
+    filter and yamllint's own file discovery. A config committed with a missing
+    or misspelled extension is therefore invisible to the integration and to
+    every other check in this file - it is silently not supported. This test is
+    the only thing that looks at the directory listing itself.
+    """
+    config_dir = dirname(devices_dir.__file__)
+    unloadable = sorted(
+        entry.name
+        for entry in scandir(config_dir)
+        if entry.is_file()
+        and not entry.name.endswith(".yaml")
+        and entry.name not in NON_CONFIG_FILES
+    )
+
+    assert unloadable == sorted(KNOWN_UNLOADABLE), (
+        "Device configs must be named *.yaml or they are never loaded. "
+        f"Unexpected: {sorted(set(unloadable) - KNOWN_UNLOADABLE)}; "
+        f"fixed (remove from KNOWN_UNLOADABLE): "
+        f"{sorted(KNOWN_UNLOADABLE - set(unloadable))}"
+    )
 
 
 def dp_match(condition, accounted, unaccounted, known, required=False):

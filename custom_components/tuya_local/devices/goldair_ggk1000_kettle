@@ -1,3 +1,17 @@
+# NOT LOADED: this file is missing the .yaml extension that the config loader
+# globs for (see available_configs in helpers/device_config.py), so the GGK1000
+# has been unsupported since it was merged in PR #3670, even though DEVICES.md
+# lists it as supported.
+#
+# Do not fix by renaming alone. The product id below is also claimed by
+# korex_axwf306n_smart_kettle.yaml, added three months earlier with a
+# completely different dp layout (strings on 101-105 rather than integers on
+# 2/4/7). A Tuya product id implies a single dp schema, so one of the two must
+# be wrong. Renaming this file first would let it match Korex kettles on
+# product id and could hand those users the wrong config.
+#
+# To resolve: confirm the GGK1000's real product id from the Tuya platform,
+# correct it here, then restore the .yaml extension.
 name: Kettle
 products:
   - id: 2vuvtw0cj8wmjrpc
